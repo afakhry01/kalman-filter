@@ -54,10 +54,10 @@ class Pedestrians:
     def get_noisy_locations(self, noise: float) -> list:
         locations = []
         for pedestrian in self.pedestrians_list:
-            angle, x, y = pedestrian.location
+            _, x, y = pedestrian.location
             x += random.gauss(0.0, noise)
             y += random.gauss(0.0, noise)
 
-            locations.append((angle, x, y))
+            locations.append((x, y))
 
         return locations        
