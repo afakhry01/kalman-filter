@@ -32,4 +32,3 @@ class Lidar:
         for ndx in range(len(self.pedestrians_kf_list)):
             measured_x, measured_y = new_measurements[ndx]
             pedestrians_kf_list[ndx].update(measured_x, measured_y)
-    

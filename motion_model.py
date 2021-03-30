@@ -26,7 +26,7 @@ class MotionModel:
              acceleration: float = 0,
              delta_t: float = 1
             ):
-            
+
         steering_angle = max(-self.max_steering_angle, steering_angle)
         steering_angle = min(self.max_steering_angle, steering_angle)
         self.angle = truncate_angle(self.angle + steering_angle)
@@ -46,7 +46,7 @@ class MotionModel:
 
     @property
     def location(self):
-        return self.angle, self.x, self.y
+        return self.x, self.y, self.angle
 
     def __repr__(self):
-        return f'angle:{self.angle}, x:{self.x}, y:{self.y}'
+        return f'x:{self.x}, y:{self.y}, angle:{self.angle}'
