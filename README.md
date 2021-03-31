@@ -22,7 +22,7 @@ $ python scene.py
 ```
 
 ## Preview
-The black dots are the true pedestrians location, red dots are the Kalman Filter predictions and the green square is the autonomous delivery robot.
+The `black dots` are the true pedestrians location, `red dots` are the Kalman Filter predictions and the `green square` is the autonomous delivery robot. The lidar has noise with `median = 0` unit distance and `standard deviation = 5` unit distance. Pedestrians move at `speed = 1` unit distance. This screenshot was taken after the filter stabilization (after 15 frames).
 
 ![screenshot](resources/kf_preview.png)
 
