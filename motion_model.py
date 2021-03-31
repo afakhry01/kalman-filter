@@ -32,12 +32,12 @@ class MotionModel:
         self.angle = truncate_angle(self.angle + steering_angle)
 
         velocity = max(0, velocity)
-        velocity = min(self.max_distance, velocity)
+        velocity = min(self.max_velocity, velocity)
         v_x = velocity * np.cos(self.angle)
         v_y = velocity * np.sin(self.angle)
 
         acceleration = max(0, acceleration)
-        acceleration = min(self.max_distance, acceleration)
+        acceleration = min(self.max_acceleration, acceleration)
         a_x = acceleration * np.cos(self.angle)
         a_y = acceleration * np.sin(self.angle)
 

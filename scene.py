@@ -2,32 +2,53 @@ import cv2
 import numpy as np
 import random
 
-from player import Player
+from autonomous_vehicle import AutonomousVehicle
+from pedestrian import Pedestrians
+from lidar import Lidar
 
 class Scene:
-    def __init__(self, player: Player, points: list, shape: tuple = (720, 1280, 3)):
-        self.player = player
-        self.points = points
-        self.playground = np.ones(shape, dtype=np.uint8) * 255
+    SHAPE = (720, 1280, 3)
 
-    def update_player(self, new_player: Player):
-        self.player = new_player
+    def __init__(self, autonomous_vehicle: AutonomousVehicle, pedestrians: Pedestrians):
+        self.autonomous_vehicle = autonomous_vehicle
+        self.pedestrians = pedestrians
+        self.playground = None
+        self.predicted_pedestrians_location = None
+        self.true_pedestrians_location = None
+
+    def next(self, delta_t):
+        self.pedestrians.move(delta_t)
+        self.predicted_pedestrians_location = self.autonomous_vehicle.move(delta_t)
+        self.true_pedestrians_location = self.pedestrians.get_true_locations()
+
+        # correct/improve KF predictions by taking a new measurement and comparing
+        # it with the predicted values
+        self.autonomous_vehicle.lidar.update_pedestrians_location(self.pedestrians)
 
     def render(self):
-        for point in self.points:
-            cv2.circle(self.playground, point, 5, (0, 0, 0), cv2.FILLED)
+        self.playground = np.ones(self.SHAPE, dtype=np.uint8) * 255
 
-        start_point = (self.player.x - 5, self.player.y - 5)
-        end_point = (self.player.x + 5, self.player.y + 5)
-        cv2.rectangle(self.playground, start_point, end_point, (0, 0, 255), cv2.FILLED)
+        for x, y in self.predicted_pedestrians_location:
+            cv2.circle(self.playground, (int(x), int(y)), 5, (0, 0, 255), cv2.FILLED)
+
+        for x, y in self.true_pedestrians_location:
+            cv2.circle(self.playground, (x, y), 5, (0, 0, 0), cv2.FILLED)
+
+        vehicle_x, vehicle_y, _ = self.autonomous_vehicle.location
+        start_point = (int(vehicle_x) - 5, int(vehicle_y) - 5)
+        end_point = (int(vehicle_x) + 5, int(vehicle_y) + 5)
+        cv2.rectangle(self.playground, start_point, end_point, (0, 255, 0), cv2.FILLED)
 
     def test_show(self):
         cv2.imshow("Screen", self.playground)
         cv2.waitKey(0)
 
 if __name__ == "__main__":
-    player = Player(640, 360)
-    points = [(random.randrange(0, 1280), random.randrange(0, 720)) for i in range(50)]
-    scene = Scene(player, points)
-    scene.render()
-    scene.test_show()
+    pedestrians = Pedestrians.init_random(30)
+    lidar = Lidar.init_from_pedestrians(pedestrians)
+    autonomous_vehicle = AutonomousVehicle(360, 640, 0, lidar, (360, 640), (0, 0))
+    scene = Scene(autonomous_vehicle, pedestrians)
+    for i in range(30):
+        scene.next(i)
+        scene.render()
+        scene.test_show()

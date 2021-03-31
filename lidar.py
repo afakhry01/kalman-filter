@@ -9,7 +9,7 @@ class Lidar:
         self.pedestrians_kf_list = pedestrians_kf_list
 
     @classmethod
-    def init_from_pedestrians(cls, pedestrians: Pedestrians) -> Lidar:
+    def init_from_pedestrians(cls, pedestrians: Pedestrians) -> 'Lidar':
         pedestrians_kf_list = []
         for x, y in pedestrians.get_noisy_locations(cls.NOISE):
             pedestrians_kf_list.append(KalmanFilter(x, y))
@@ -19,8 +19,8 @@ class Lidar:
     def predict_pedestrians_location(self):
         predicted_pedestrians_location = []
         for ndx in range(len(self.pedestrians_kf_list)):
-            pedestrians_kf_list[ndx].predict()
-            predicted_pedestrians_location.append(pedestrians_kf_list[ndx].location)
+            self.pedestrians_kf_list[ndx].predict()
+            predicted_pedestrians_location.append(self.pedestrians_kf_list[ndx].location)
 
         return predicted_pedestrians_location
 
@@ -31,4 +31,4 @@ class Lidar:
 
         for ndx in range(len(self.pedestrians_kf_list)):
             measured_x, measured_y = new_measurements[ndx]
-            pedestrians_kf_list[ndx].update(measured_x, measured_y)
+            self.pedestrians_kf_list[ndx].update(measured_x, measured_y)
