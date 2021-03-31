@@ -6,6 +6,7 @@ This project simulates an autonomous delivery robot that uses `Kalman Filter` to
 1. Using conda:
    ```
    $ git clone https://github.com/afakhry01/kalman-filter
+   $ cd kalman-filter
    $ conda env update -f environment.yml
    $ conda activate kf
    ```
@@ -19,6 +20,11 @@ A temporary simulation is being used now to show the accuracy of Kalman Filter p
 ```
 $ python scene.py
 ```
+
+## Preview
+The black dots are the true pedestrians location, red dots are the Kalman Filter predictions and the green square is the autonomous delivery robot.
+
+![screenshot](resources/kf_preview.png)
 
 ## TODO List
 - [X] Build Kalman Filter
