@@ -1,0 +1,8 @@
+name: kf2
+dependencies:
+  - pip=21.0.1
+  - python=3.9.2
+  - setuptools=52.0.0
+  - pip:
+    - numpy==1.20.1
+    - opencv-python==4.5.1.48
